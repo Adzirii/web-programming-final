@@ -1,24 +1,43 @@
 const API_URL = '/api/orders';
+let allOrders = [];
+let currentSort = { column: null, asc: true };
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchOrders();
 
     const orderForm = document.getElementById('orderForm');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const searchInput = document.getElementById('searchInput');
 
     orderForm.addEventListener('submit', handleFormSubmit);
     cancelEditBtn.addEventListener('click', resetForm);
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allOrders.filter(o =>
+            o.customerName.toLowerCase().includes(term) ||
+            o.pizzaType.toLowerCase().includes(term)
+        );
+        renderOrders(filtered);
+    });
 });
 
 async function fetchOrders() {
     try {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Failed to fetch orders');
-        const orders = await response.json();
-        renderOrders(orders);
+        allOrders = await response.json();
+        updateStats();
+        renderOrders(allOrders);
     } catch (error) {
         showAlert(error.message, 'danger');
     }
+}
+
+function updateStats() {
+    document.getElementById('statTotalOrders').textContent = allOrders.length;
+    document.getElementById('statTotalPizzas').textContent = allOrders.reduce((sum, o) => sum + parseInt(o.quantity, 10), 0);
+    document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
 }
 
 function renderOrders(orders) {
@@ -57,10 +76,44 @@ function renderOrders(orders) {
     });
 }
 
+function sortOrders(column) {
+    if (currentSort.column === column) {
+        currentSort.asc = !currentSort.asc;
+    } else {
+        currentSort.column = column;
+        currentSort.asc = true;
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const term = searchInput ? searchInput.value.toLowerCase() : '';
+
+    let filtered = allOrders;
+    if (term) {
+        filtered = allOrders.filter(o =>
+            o.customerName.toLowerCase().includes(term) ||
+            o.pizzaType.toLowerCase().includes(term)
+        );
+    }
+
+    filtered.sort((a, b) => {
+        let valA = a[column];
+        let valB = b[column];
+
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return currentSort.asc ? -1 : 1;
+        if (valA > valB) return currentSort.asc ? 1 : -1;
+        return 0;
+    });
+
+    renderOrders(filtered);
+}
+
 async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
-
+    
     if (!form.checkValidity()) {
         e.stopPropagation();
         form.classList.add('was-validated');

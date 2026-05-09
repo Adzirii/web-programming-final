@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
         <div class="container">
-            <a class="navbar-brand" href="#">🍕 Pizza Ordering System</a>
+            <a class="navbar-brand" href="#"> Pizza Ordering System</a>
         </div>
     </nav>
 
@@ -92,10 +92,39 @@
             </div>
 
             <div class="col-md-8">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="card text-white bg-primary shadow-sm h-100">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-0">Total Orders</h6>
+                                <h3 class="mb-0" id="statTotalOrders">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-success shadow-sm h-100">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-0">Total Pizzas</h6>
+                                <h3 class="mb-0" id="statTotalPizzas">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-warning shadow-sm h-100">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-0">Pending</h6>
+                                <h3 class="mb-0" id="statPending">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card shadow-sm">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">Active Orders</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="fetchOrders()">Refresh</button>
+                        <div class="d-flex">
+                            <input type="text" id="searchInput" class="form-control form-control-sm me-2" placeholder="Search customer...">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fetchOrders()">Refresh</button>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -103,11 +132,11 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>ID</th>
-                                        <th>Customer</th>
-                                        <th>Pizza</th>
-                                        <th>Size</th>
-                                        <th>Qty</th>
-                                        <th>Status</th>
+                                        <th style="cursor: pointer" onclick="sortOrders('customerName')">Customer ↕&#xFE0E;</th>
+                                        <th style="cursor: pointer" onclick="sortOrders('pizzaType')">Pizza ↕&#xFE0E;</th>
+                                        <th style="cursor: pointer" onclick="sortOrders('size')">Size ↕&#xFE0E;</th>
+                                        <th style="cursor: pointer" onclick="sortOrders('quantity')">Qty ↕&#xFE0E;</th>
+                                        <th style="cursor: pointer" onclick="sortOrders('status')">Status ↕&#xFE0E;</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
