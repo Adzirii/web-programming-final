@@ -86,11 +86,11 @@ function sortOrders(column) {
 
     const searchInput = document.getElementById('searchInput');
     const term = searchInput ? searchInput.value.toLowerCase() : '';
-
+    
     let filtered = allOrders;
     if (term) {
-        filtered = allOrders.filter(o =>
-            o.customerName.toLowerCase().includes(term) ||
+        filtered = allOrders.filter(o => 
+            o.customerName.toLowerCase().includes(term) || 
             o.pizzaType.toLowerCase().includes(term)
         );
     }
@@ -98,7 +98,7 @@ function sortOrders(column) {
     filtered.sort((a, b) => {
         let valA = a[column];
         let valB = b[column];
-
+        
         if (typeof valA === 'string') valA = valA.toLowerCase();
         if (typeof valB === 'string') valB = valB.toLowerCase();
 
